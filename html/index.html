@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Rental X-Ray — Investor Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../css/styles.css" />
+</head>
+<body>
+
+  <!-- MAIN ACCESS CARD (3 logo + 폼) -->
+  <div class="gate-wide" id="accessGate">
+    <div class="gate-inner-wide">
+
+      <!-- 3 LOGO – 개별 파일로 교체 -->
+      <div class="logo-inside-card">
+        <img src="../css/img/logorental.png" class="logo-single" alt="Rental X-Ray" />
+        <img src="../css/img/logoguide.png" class="logo-single" alt="GuideDoc" />
+        <img src="../css/img/logoview.png"  class="logo-single" alt="CBCT View" />
+      </div>
+
+
+      <div class="lang-multiline">
+        <div>This site is an information document for the dental X-ray rental service business. Please request a password to view the materials. This project also accepts cryptocurrency investments (USDT/BTC/ETH).</div>
+        <div>このサイトは歯科用レントゲンレンタルサービス事業の説明書です。資料を閲覧するにはパスワードをご請求ください。</div>
+        <div>Ce site est un document d'information concernant le service de location de radiographie dentaire. Veuillez demander un mot de passe pour consulter les documents. Ce projet accepte également les investissements en cryptomonnaie (USDT/BTC/ETH).</div>
+        <div>本网站是关于牙科X光机租赁服务业务的说明文件。如需阅览资料，请索取密码。本项目也接受加密货币（USDT/BTC/ETH）投资。</div>
+        <div>Este sitio es un documento informativo sobre el negocio de servicios de alquiler de rayos X dentales. Por favor, solicite una contraseña para ver los materiales. Este proyecto también acepta inversiones en criptomonedas (USDT/BTC/ETH).</div>        
+        <div>이 사이트는 치과용 엑스레이 렌탈 서비스 사업에 대한 설명서입니다. 자료 열람을 원하시면 비밀번호를 요청해 주세요. 본 프로젝트는 코인(USDT/BTC/ETH) 투자도 가능합니다.</div>
+      </div>
+
+      <!-- Request Password -->
+      <form id="requestForm" class="gate-card-wide">
+        <h2>Request Access Password</h2>
+        <p class="gate-text">
+          Enter your <b>email</b> or <b>mobile number</b>.
+          You will receive a one-time password via email or text.
+        </p>
+
+        <div class="gate-input-row">
+          <input type="email" id="requestEmail" placeholder="Email address" />
+          <span class="gate-or">or</span>
+          <input type="tel" id="requestPhone" placeholder="Mobile number" />
+        </div>
+
+        <button type="submit" class="btn primary">Request Password</button>
+        <p class="gate-helper" id="requestHelper"></p>
+      </form>
+
+      <!-- Enter Password -->
+      <form id="passwordForm" class="gate-card-wide gate-password">
+        <label for="passwordInput">Already have a password?</label>
+
+        <div class="gate-input-row single">
+          <input type="password" id="passwordInput" placeholder="Enter access password" />
+          <button type="submit" class="btn outline">Enter</button>
+        </div>
+
+        <p class="gate-hint">Demo password: <code>RENTAL2025</code></p>
+        <p class="gate-error" id="passwordError"></p>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- 로그인 성공 후 보여줄 본문 (PDF + 투자 설명) -->
+  <div id="siteContent" class="site hidden">
+    <main>
+      <!-- BOOK-STYLE PAGE VIEWER (1–2, 3–4, 5–6 …) -->
+      <!-- BOOK-STYLE IMAGE VIEWER (1–24 pages, 2 pages per spread) -->
+      <section class="pdf-book-section">
+        <div class="book-wrapper">
+          <div class="book" id="bookViewer">
+            <!-- LEFT PAGE -->
+            <div class="page-slot page-left">
+              <div class="page-inner">
+                <img
+                  id="pageImgLeft"
+                  src="../css/book/1.png"
+                  alt="Page 1"
+                />
+              </div>
+            </div>
+
+            <!-- RIGHT PAGE -->
+            <div class="page-slot page-right">
+              <div class="page-inner">
+                <img
+                  id="pageImgRight"
+                  src="../css/book/2.png"
+                  alt="Page 2"
+                />
+              </div>
+            </div>
+
+            <!-- NAV BUTTONS -->
+            <button class="page-nav prev" id="pagePrev" aria-label="Previous pages">
+              ‹
+            </button>
+            <button class="page-nav next" id="pageNext" aria-label="Next pages">
+              ›
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 투자 방식 설명 + 메세지 박스 -->
+      <section class="invest-section" id="invest">
+        <div class="invest-inner">
+          <div class="invest-copy">
+            <h2>Investment Structure & Capital Protection</h2>
+            <p>
+              This private offering targets a <strong>$10M equity + revenue-share investment</strong>
+              to scale a nationwide CBCT rental platform.
+            </p>
+            <p>
+              Investor capital is deployed into <strong>income-producing CBCT rental assets</strong>,
+              with approximately 60% of free cash flow reinvested into additional units.
+              Projected outcome is a compounding hardware platform with both
+              <strong>cash distributions</strong> and <strong>equity growth</strong>.
+            </p>
+            <p>
+              Our goal is to maximize investor protection through:
+            </p>
+            <ul>
+              <li>Clear cash-flow waterfall &amp; audited reporting</li>
+              <li>Priority on <strong>return of principal</strong> before profit sharing</li>
+              <li>Exit options combining cash distributions and structured equity</li>
+            </ul>
+
+            <p class="invest-note">
+              For larger tickets, a <strong>dedicated private banking channel</strong> is provided.
+            </p>
+
+            <a
+              href="../assets/private-bank-wire-instructions.pdf"
+              target="_blank"
+              class="bank-link"
+            >
+              Download Private Bank Wire Instructions (PDF)
+            </a>
+          </div>
+
+          <form id="investorMessageForm" class="invest-form">
+            <h3>Share Your Questions or Investment Terms</h3>
+            <p class="invest-form-text">
+              Tell us your preferred check size, timing, and any specific protections
+              you require. We will respond with a customized capital-protection outline
+              and banking options.
+            </p>
+
+            <label for="investorMessage">Message to Rental X-Ray</label>
+            <textarea
+            id="investorMessage"
+            rows="6"
+            placeholder="Example: I'm interested in a $100,000 ticket with 3–5 years. Please give me some guidance on the price of the investment, the guarantee, how to invest, and the business plan. Please attach a copy of the contract."
+          ></textarea>
+
+            <button type="submit" class="btn send-btn">
+              <span class="btn-label">Send Message</span>
+              <span class="btn-check">✔</span>
+            </button>
+
+            <p class="sent-confirm" id="sentConfirm">
+              Thank you. Your message has been received.
+              We will reply with a detailed investment guide, risk disclosures, and
+              a link to our private banking partner for secure funding.
+            </p>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../script.js"></script>
+</body>
+</html>

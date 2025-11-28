@@ -1,0 +1,632 @@
+/* ===============================
+   기본 테마 변수
+   =============================== */
+:root {
+  --bg: #02030a;
+  --bg-alt: #060816;
+  --card: #0c1120;
+  --accent: #35c3ff;
+  --accent-soft: rgba(53, 195, 255, 0.15);
+  --text-main: #f5f7ff;
+  --text-muted: #a5b0d4;
+  --danger: #ff5c7a;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --radius-xl: 24px;
+  --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.6);
+  --transition-fast: 0.18s ease-out;
+  --transition-med: 0.25s ease;
+  --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
+}
+
+/* ===============================
+   RESET
+   =============================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===============================
+   BODY
+   =============================== */
+body {
+  font-family: var(--font-main);
+  background: radial-gradient(circle at top, #13173a 0, #02030a 55%);
+  color: var(--text-main);
+}
+
+/* ===============================
+   3 LOGO 영역
+   =============================== */
+
+/* 3개 로고 박스 (가로 정렬) */
+.logo-inside-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 58px;              /* 로고 간 간격 */
+  margin: 30px 0 18px;
+}
+
+/* 로고 3배 확대 */
+.logo-single {
+  height: 165px;          /* 여기 숫자만 바꾸면 전체 크기 조절 */
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,.65));
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  opacity: 0.97;
+}
+
+.logo-single:hover {
+  transform: translateY(-5px) scale(1.02);
+  opacity: 1;
+}
+
+/* 모바일에서 세로 정렬 + 약간 축소 */
+@media (max-width: 600px) {
+  .logo-inside-card {
+    flex-direction: column;
+    gap: 22px;
+  }
+
+  .logo-single {
+    height: 110px;
+  }
+}
+
+/* ===============================
+   다국어 한 줄 안내 (언어별 한 줄)
+   =============================== */
+
+.lang-multiline {
+  max-width: 1200px;
+  margin: 14px auto 26px;
+  padding: 0 20px;
+  font-size: 0.63rem;         /* 작은 폰트 */
+  line-height: 1.25;          /* 촘촘한 행간 */
+  color: #aeb7d4;
+  opacity: 0.85;
+  text-align: center;
+}
+
+.lang-multiline div {
+  margin-bottom: 4px;         /* 언어 줄 간격 */
+}
+
+/* ===============================
+   GATE 공통 요소 (입장 카드)
+   =============================== */
+
+/* 메인 카드 래퍼 – 화면 중앙에, 위 여백 최소 */
+.gate-wide {
+  display: flex;
+  justify-content: center;
+  padding: 0 24px 60px;
+  margin-top: 0;
+}
+/* --- ACCESS CARD: 화면 세로 가운데 정렬 --- */
+.gate-wide {
+  min-height: 100vh;              /* 뷰포트 전체 높이 */
+  display: flex;
+  align-items: center;            /* 세로 가운데 */
+  justify-content: center;        /* 가로 가운데 */
+  padding: 40px 24px 60px;        /* 위/양옆/아래 여백 */
+}
+
+.gate-inner-wide {
+  width: 100%;
+  max-width: 900px;
+  border-radius: 28px;
+  background: radial-gradient(circle at top, rgba(255,255,255,0.06), #050816);
+  box-shadow: 0 26px 60px rgba(0,0,0,0.8);
+  padding: 26px 26px 24px;
+}
+
+/* 카드 (Request, Already have password) */
+.gate-card-wide {
+  background: rgba(0,0,0,0.35);
+  border-radius: 18px;
+  padding: 24px 32px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.gate-card-wide h2 {
+  font-size: 1.15rem;
+  margin: 0 0 6px;
+}
+
+
+.gate-text {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0 0 14px;
+  line-height: 1.5;
+}
+
+.gate-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.gate-input-row.single {
+  gap: 10px;
+}
+
+.gate-input-row input {
+  flex: 1;
+  background: #050819;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  padding: 10px 14px;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  outline: none;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast);
+}
+
+.gate-input-row input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+  background: #050a1e;
+}
+
+.gate-or {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding: 0 4px;
+}
+
+.gate-helper,
+.gate-hint,
+.gate-error {
+  font-size: 0.8rem;
+  margin: 4px 2px 0;
+}
+
+.gate-helper {
+  color: var(--text-muted);
+}
+
+.gate-hint {
+  color: var(--text-muted);
+}
+
+.gate-error {
+  color: var(--danger);
+}
+
+.gate-password label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
+}
+
+/* ===============================
+   버튼 공통
+   =============================== */
+
+.btn {
+  border-radius: 999px;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition:
+    background var(--transition-med),
+    transform var(--transition-fast),
+    box-shadow var(--transition-fast),
+    border-color var(--transition-fast),
+    color var(--transition-fast);
+  font-weight: 500;
+}
+
+.btn.primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background: linear-gradient(135deg, var(--accent), #40e3ff);
+  color: #02030a;
+  box-shadow: 0 12px 25px rgba(22, 161, 224, 0.4);
+}
+
+.btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 35px rgba(22, 161, 224, 0.5);
+}
+
+.btn.outline {
+  background: transparent;
+  color: var(--accent);
+  border-color: var(--accent);
+  padding-inline: 16px;
+  white-space: nowrap;
+}
+
+.btn.outline:hover {
+  background: var(--accent-soft);
+}
+
+/* ===============================
+   메인 사이트 / PDF / 투자 섹션
+   =============================== */
+
+.site.hidden {
+  display: none;
+}
+
+.site {
+  min-height: 100vh;
+  background: #000;
+}
+
+/* ===== BOOK-STYLE IMAGE VIEWER ===== */
+/* --- BOOK VIEW: 두 페이지를 가로로 크게 배치 --- */
+
+.pdf-book-section {
+  background: #000;
+  padding: 0;                   /* 위아래 여백 최소화 */
+}
+
+.book-wrapper {
+  min-height: 100vh;            /* 화면 전체 높이 안에서 중앙 정렬 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book {
+  display: flex;
+  gap: 20px;                    /* 두 페이지 사이 간격 */
+  width: 100%;
+  max-width: 1400px;            /* 데스크탑에서 두 페이지 합친 최대 폭 */
+  padding: 0 32px;
+  position: relative;           /* 네비게이션 버튼 기준 */
+}
+
+/* 각 페이지 슬랏 (왼쪽 / 오른쪽 공통) */
+.page-slot {
+  flex: 1;
+  height: 80vh;                 /* 화면 높이의 약 80% → 거의 반 화면 크기 느낌 */
+  background: #050816;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+}
+
+/* 이미지가 페이지 안을 꽉 채우도록 */
+.page-inner {
+  width: 100%;
+  height: 100%;
+}
+
+.page-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;          /* 비율 유지해서 꽉 차게 */
+  display: block;
+}
+
+/* 모바일에서는 한 페이지씩 */
+@media (max-width: 900px) {
+  .book {
+    flex-direction: column;
+    max-width: 100%;
+    padding: 0 12px;
+  }
+
+  .page-slot {
+    height: 70vh;
+  }
+}
+
+
+/* -------- 투자 섹션 -------- */
+
+.invest-section {
+  padding: 48px 20px 60px;
+  background: radial-gradient(circle at top, #121943 0, #03040c 60%);
+}
+
+.invest-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+  display: grid;
+  gap: 32px;
+}
+
+@media (min-width: 900px) {
+  .invest-inner {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  }
+}
+
+.invest-copy,
+.invest-form {
+  background: #070b1b;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-subtle);
+  padding: 22px 22px 20px;
+  box-shadow: var(--shadow-soft);
+}
+
+.invest-copy h2 {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+}
+
+.invest-copy p {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: 0 0 10px;
+}
+
+.invest-copy ul {
+  margin: 0 0 12px 18px;
+  padding: 0;
+}
+
+.invest-copy li {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.invest-note {
+  font-size: 0.88rem;
+  margin-top: 4px;
+}
+
+.bank-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+  text-decoration: none;
+  color: var(--accent);
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--accent-soft);
+  background: rgba(53, 195, 255, 0.06);
+}
+
+.bank-link:hover {
+  background: var(--accent-soft);
+}
+
+/* 투자 폼 */
+
+.invest-form h3 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.invest-form-text {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0 0 12px;
+}
+
+.invest-form label {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.invest-form textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 120px;
+  border-radius: 18px;
+  border: 1px solid var(--border-subtle);
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  background: #050819;
+  color: var(--text-main);
+  outline: none;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background var(--transition-fast);
+  margin-bottom: 12px;
+}
+
+.invest-form textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent-soft);
+  background: #050a1e;
+}
+
+/* Send 버튼 애니메이션 */
+
+.send-btn {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--accent), #40e3ff);
+  color: #02030a;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 14px 30px rgba(22, 161, 224, 0.5);
+}
+
+.send-btn .btn-check {
+  opacity: 0;
+  transform: scale(0.5) translateY(6px);
+  transition: opacity var(--transition-med), transform var(--transition-med);
+}
+
+.send-btn.sent {
+  background: #22c55e;
+  box-shadow: 0 14px 30px rgba(34, 197, 94, 0.4);
+}
+
+.send-btn.sent .btn-label {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.send-btn.sent .btn-check {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* hover ripple 효과 */
+.send-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.28),
+    transparent 60%
+  );
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.send-btn:hover::after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.sent-confirm {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.25s ease, max-height 0.25s ease;
+}
+
+.sent-confirm.visible {
+  opacity: 1;
+  max-height: 80px;
+}
+
+/* ===============================
+   UTIL + 모바일 튜닝
+   =============================== */
+
+.hidden {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .gate-card-wide {
+    padding: 18px 16px;
+  }
+
+  .gate-input-row {
+    flex-direction: column;
+  }
+
+  .gate-or {
+    display: none;
+  }
+
+  .gate-input-row.single {
+    flex-direction: row;
+  }
+
+  .invest-section {
+    padding-inline: 14px;
+  }
+
+  .invest-copy,
+  .invest-form {
+    padding: 18px 14px 16px;
+  }
+}
+
+/* =========================
+   BOOK VIEW 전체 가로 꽉 차게 + 화살표 재배치
+   ========================== */
+
+/* 배경 전체 */
+.pdf-book-section {
+  background: #000;
+  padding: 0;
+}
+
+/* 뷰포트 기준 세로 가운데 정렬 */
+.book-wrapper {
+  width: 100vw;                 /* 브라우저 가로 100% */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 두 페이지 묶음 */
+.book {
+  position: relative;
+  width: 100%;
+  max-width: none;              /* max-width 제한 제거 → 가로 꽉 */
+  padding: 0 40px;              /* 좌우 여백만 살짝 */
+  display: flex;
+  gap: 28px;                    /* 두 페이지 사이 간격 */
+  box-sizing: border-box;
+}
+
+/* 각 페이지 박스 */
+.page-slot {
+  flex: 1;
+  height: 78vh;                 /* 화면 높이의 ~80% */
+  background: #050816;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+}
+
+.page-inner {
+  width: 100%;
+  height: 100%;
+}
+
+.page-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;          /* 비율 유지 */
+  display: block;
+}
+
+/* 좌우 넘기기 화살표 공통 스타일 */
+.page-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  font-size: 26px;
+  display: flex;
+  align-items:
