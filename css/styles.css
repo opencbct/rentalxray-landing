@@ -18,15 +18,12 @@
   --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Inter", sans-serif;
 }
 
-/* ===============================
-   RESET
-   =============================== */
+/* RESET */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
-
 html,
 body {
   margin: 0;
@@ -35,9 +32,6 @@ body {
   height: 100%;
 }
 
-/* ===============================
-   BODY
-   =============================== */
 body {
   font-family: var(--font-main);
   background: radial-gradient(circle at top, #13173a 0, #02030a 55%);
@@ -45,82 +39,72 @@ body {
 }
 
 /* ===============================
-   3 LOGO 영역
+   3 LOGO 3D ROTATION
    =============================== */
-
-/* 3개 로고 박스 (가로 정렬) */
 .logo-inside-card {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 58px;              /* 로고 간 간격 */
+  gap: 56px;
   margin: 30px 0 18px;
+  flex-wrap: nowrap;
+  perspective: 1200px;
 }
 
-/* 로고 3배 확대 */
 .logo-single {
-  height: 165px;          /* 여기 숫자만 바꾸면 전체 크기 조절 */
+  height: 110px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 12px 24px rgba(0,0,0,.65));
-  transition: transform 0.25s ease, opacity 0.25s ease;
-  opacity: 0.97;
+  filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.75));
+  transition:
+    transform 0.7s cubic-bezier(0.23, 1, 0.32, 1),
+    filter 0.4s ease;
+  transform-origin: center center;
+  backface-visibility: hidden;
+  cursor: pointer;
 }
 
 .logo-single:hover {
-  transform: translateY(-5px) scale(1.02);
-  opacity: 1;
+  transform: rotateY(180deg) rotateX(8deg) scale(1.03);
+  filter: drop-shadow(0 22px 40px rgba(0, 0, 0, 0.9));
 }
 
-/* 모바일에서 세로 정렬 + 약간 축소 */
 @media (max-width: 600px) {
   .logo-inside-card {
-    flex-direction: column;
-    gap: 22px;
+    gap: 32px;
   }
-
   .logo-single {
-    height: 110px;
+    height: 80px;
   }
 }
 
 /* ===============================
-   다국어 한 줄 안내 (언어별 한 줄)
+   LANG MULTILINE
    =============================== */
-
 .lang-multiline {
   max-width: 1200px;
   margin: 14px auto 26px;
   padding: 0 20px;
-  font-size: 0.63rem;         /* 작은 폰트 */
-  line-height: 1.25;          /* 촘촘한 행간 */
+  font-size: 0.63rem;
+  line-height: 1.25;
   color: #aeb7d4;
   opacity: 0.85;
   text-align: center;
 }
-
 .lang-multiline div {
-  margin-bottom: 4px;         /* 언어 줄 간격 */
+  margin-bottom: 4px;
 }
 
 /* ===============================
-   GATE 공통 요소 (입장 카드)
+   ACCESS GATE
    =============================== */
-
-/* 메인 카드 래퍼 – 화면 중앙에, 위 여백 최소 */
 .gate-wide {
+  min-height: 100vh;
   display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 0 24px 60px;
+  padding: 40px 24px 60px;
   margin-top: 0;
-}
-/* --- ACCESS CARD: 화면 세로 가운데 정렬 --- */
-.gate-wide {
-  min-height: 100vh;              /* 뷰포트 전체 높이 */
-  display: flex;
-  align-items: center;            /* 세로 가운데 */
-  justify-content: center;        /* 가로 가운데 */
-  padding: 40px 24px 60px;        /* 위/양옆/아래 여백 */
 }
 
 .gate-inner-wide {
@@ -132,7 +116,6 @@ body {
   padding: 26px 26px 24px;
 }
 
-/* 카드 (Request, Already have password) */
 .gate-card-wide {
   background: rgba(0,0,0,0.35);
   border-radius: 18px;
@@ -140,12 +123,10 @@ body {
   margin-bottom: 24px;
   border: 1px solid rgba(255,255,255,0.1);
 }
-
 .gate-card-wide h2 {
   font-size: 1.15rem;
   margin: 0 0 6px;
 }
-
 
 .gate-text {
   font-size: 0.88rem;
@@ -160,7 +141,6 @@ body {
   gap: 8px;
   margin-bottom: 12px;
 }
-
 .gate-input-row.single {
   gap: 10px;
 }
@@ -179,7 +159,6 @@ body {
     box-shadow var(--transition-fast),
     background var(--transition-fast);
 }
-
 .gate-input-row input:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px var(--accent-soft);
@@ -198,18 +177,9 @@ body {
   font-size: 0.8rem;
   margin: 4px 2px 0;
 }
-
-.gate-helper {
-  color: var(--text-muted);
-}
-
-.gate-hint {
-  color: var(--text-muted);
-}
-
-.gate-error {
-  color: var(--danger);
-}
+.gate-helper { color: var(--text-muted); }
+.gate-hint   { color: var(--text-muted); }
+.gate-error  { color: var(--danger); }
 
 .gate-password label {
   display: block;
@@ -217,10 +187,7 @@ body {
   margin-bottom: 8px;
 }
 
-/* ===============================
-   버튼 공통
-   =============================== */
-
+/* BUTTONS */
 .btn {
   border-radius: 999px;
   padding: 10px 20px;
@@ -245,7 +212,6 @@ body {
   color: #02030a;
   box-shadow: 0 12px 25px rgba(22, 161, 224, 0.4);
 }
-
 .btn.primary:hover {
   transform: translateY(-1px);
   box-shadow: 0 18px 35px rgba(22, 161, 224, 0.5);
@@ -258,87 +224,187 @@ body {
   padding-inline: 16px;
   white-space: nowrap;
 }
-
 .btn.outline:hover {
   background: var(--accent-soft);
 }
 
-/* ===============================
-   메인 사이트 / PDF / 투자 섹션
-   =============================== */
-
-.site.hidden {
-  display: none;
-}
-
+/* MAIN SITE WRAPPER */
+.site.hidden { display: none; }
 .site {
   min-height: 100vh;
   background: #000;
 }
 
-/* ===== BOOK-STYLE IMAGE VIEWER ===== */
-/* --- BOOK VIEW: 두 페이지를 가로로 크게 배치 --- */
-
+/* ===============================
+   BOOK VIEWER (2 PAGE SPREAD)
+   =============================== */
 .pdf-book-section {
+  padding: 40px 0 60px;
   background: #000;
-  padding: 0;                   /* 위아래 여백 최소화 */
 }
 
 .book-wrapper {
-  min-height: 100vh;            /* 화면 전체 높이 안에서 중앙 정렬 */
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0;   /* 🔥 여백 제거 */
+}
+
+#flipbook {
+  width: min(1600px, 95vw);
+  height: min(1000px, 90vh);
+  margin: 0 auto;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.9);
+  background: #000;
 }
 
 .book {
-  display: flex;
-  gap: 20px;                    /* 두 페이지 사이 간격 */
   width: 100%;
-  max-width: 1400px;            /* 데스크탑에서 두 페이지 합친 최대 폭 */
-  padding: 0 32px;
-  position: relative;           /* 네비게이션 버튼 기준 */
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 24px;
+  perspective: 2000px;
+  position: relative;
 }
 
-/* 각 페이지 슬랏 (왼쪽 / 오른쪽 공통) */
+/* 페이지 박스 */
 .page-slot {
   flex: 1;
-  height: 80vh;                 /* 화면 높이의 약 80% → 거의 반 화면 크기 느낌 */
-  background: #050816;
-  border-radius: 10px;
+  position: relative;
+  background: #02030a;
+  box-shadow: 0 26px 60px rgba(0,0,0,0.9);
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+  height: 80vh;
+  cursor: pointer;
 }
 
-/* 이미지가 페이지 안을 꽉 채우도록 */
 .page-inner {
   width: 100%;
   height: 100%;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 .page-inner img {
   width: 100%;
   height: 100%;
-  object-fit: contain;          /* 비율 유지해서 꽉 차게 */
+  object-fit: contain;
   display: block;
 }
 
-/* 모바일에서는 한 페이지씩 */
+/* 회전 축 */
+.page-left .page-inner  { transform-origin: right center; }
+.page-right .page-inner { transform-origin: left center; }
+
+/* 화살표 버튼 */
+.page-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: none;
+  background: radial-gradient(circle at 30% 30%, #4be6ff, #0079ff);
+  color: #02030a;
+  font-size: 26px;
+  font-weight: 600;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+  z-index: 10;
+}
+.page-nav.prev { left: -60px; }
+.page-nav.next { right: -60px; }
+
+.page-nav:hover {
+  transform: translateY(-50%) scale(1.05);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.9);
+  opacity: 1;
+}
+
+/* 반응형 */
+@media (max-width: 1100px) {
+  .book-wrapper { padding-inline: 12px; }
+  .page-nav.prev { left: 4px; }
+  .page-nav.next { right: 4px; }
+}
 @media (max-width: 900px) {
   .book {
     flex-direction: column;
     max-width: 100%;
-    padding: 0 12px;
   }
-
   .page-slot {
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85);
     height: 70vh;
+  }
+  .page-nav { display: none; } /* 모바일에서는 페이지 탭해서 넘김 */
+  @media (max-width: 800px) {
+  #flipbook {
+    width: 100vw;
+    height: 85vh; /* 🔥 기존보다 크게 */
   }
 }
 
+}
 
-/* -------- 투자 섹션 -------- */
+/* PAGE FLIP 애니메이션 */
+@keyframes pageFlipNext {
+  0% {
+    transform: rotateY(0deg);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.9);
+  }
+  30% {
+    transform: rotateY(-40deg) translateZ(18px) scaleY(0.98);
+    box-shadow: -10px 26px 70px rgba(0, 0, 0, 1);
+  }
+  60% {
+    transform: rotateY(-110deg) translateZ(4px) scaleY(0.96);
+    box-shadow: -24px 18px 60px rgba(0, 0, 0, 1);
+  }
+  100% {
+    transform: rotateY(-180deg) translateZ(0) scaleY(1);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.85);
+  }
+}
 
+@keyframes pageFlipPrev {
+  0% {
+    transform: rotateY(0deg);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.9);
+  }
+  30% {
+    transform: rotateY(40deg) translateZ(18px) scaleY(0.98);
+    box-shadow: 10px 26px 70px rgba(0, 0, 0, 1);
+  }
+  60% {
+    transform: rotateY(110deg) translateZ(4px) scaleY(0.96);
+    box-shadow: 24px 18px 60px rgba(0, 0, 0, 1);
+  }
+  100% {
+    transform: rotateY(180deg) translateZ(0) scaleY(1);
+    box-shadow: 0 26px 60px rgba(0, 0, 0, 0.85);
+  }
+}
+
+.flip-next { animation: pageFlipNext 0.85s ease forwards; }
+.flip-prev { animation: pageFlipPrev 0.85s ease forwards; }
+
+/* ===============================
+   INVEST SECTION
+   =============================== */
 .invest-section {
   padding: 48px 20px 60px;
   background: radial-gradient(circle at top, #121943 0, #03040c 60%);
@@ -371,25 +437,21 @@ body {
   margin-bottom: 12px;
   font-size: 1.4rem;
 }
-
 .invest-copy p {
   font-size: 0.92rem;
   color: var(--text-muted);
   line-height: 1.6;
   margin: 0 0 10px;
 }
-
 .invest-copy ul {
   margin: 0 0 12px 18px;
   padding: 0;
 }
-
 .invest-copy li {
   font-size: 0.9rem;
   color: var(--text-muted);
   margin-bottom: 4px;
 }
-
 .invest-note {
   font-size: 0.88rem;
   margin-top: 4px;
@@ -408,30 +470,23 @@ body {
   border: 1px solid var(--accent-soft);
   background: rgba(53, 195, 255, 0.06);
 }
-
-.bank-link:hover {
-  background: var(--accent-soft);
-}
+.bank-link:hover { background: var(--accent-soft); }
 
 /* 투자 폼 */
-
 .invest-form h3 {
   margin: 0 0 8px;
   font-size: 1.1rem;
 }
-
 .invest-form-text {
   font-size: 0.9rem;
   color: var(--text-muted);
   margin: 0 0 12px;
 }
-
 .invest-form label {
   display: block;
   font-size: 0.9rem;
   margin-bottom: 6px;
 }
-
 .invest-form textarea {
   width: 100%;
   resize: vertical;
@@ -441,7 +496,7 @@ body {
   padding: 10px 12px;
   font-size: 0.9rem;
   background: #050819;
-  color: var(--text-main);
+  color: #f5f5f5;
   outline: none;
   transition:
     border-color var(--transition-fast),
@@ -449,15 +504,13 @@ body {
     background var(--transition-fast);
   margin-bottom: 12px;
 }
-
 .invest-form textarea:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 1px var(--accent-soft);
   background: #050a1e;
 }
 
-/* Send 버튼 애니메이션 */
-
+/* SEND BUTTON ANIMATION */
 .send-btn {
   position: relative;
   overflow: hidden;
@@ -470,29 +523,24 @@ body {
   gap: 8px;
   box-shadow: 0 14px 30px rgba(22, 161, 224, 0.5);
 }
-
 .send-btn .btn-check {
   opacity: 0;
   transform: scale(0.5) translateY(6px);
   transition: opacity var(--transition-med), transform var(--transition-med);
 }
-
 .send-btn.sent {
   background: #22c55e;
   box-shadow: 0 14px 30px rgba(34, 197, 94, 0.4);
 }
-
 .send-btn.sent .btn-label {
   opacity: 0;
   transform: translateY(-8px);
 }
-
 .send-btn.sent .btn-check {
   opacity: 1;
   transform: scale(1) translateY(0);
 }
 
-/* hover ripple 효과 */
 .send-btn::after {
   content: "";
   position: absolute;
@@ -506,7 +554,6 @@ body {
   transform: scale(0.6);
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
-
 .send-btn:hover::after {
   opacity: 1;
   transform: scale(1);
@@ -521,112 +568,22 @@ body {
   overflow: hidden;
   transition: opacity 0.25s ease, max-height 0.25s ease;
 }
-
 .sent-confirm.visible {
   opacity: 1;
   max-height: 80px;
 }
 
-/* ===============================
-   UTIL + 모바일 튜닝
-   =============================== */
-
-.hidden {
-  display: none !important;
-}
+/* UTIL */
+.hidden { display: none !important; }
 
 @media (max-width: 600px) {
   .gate-card-wide {
     padding: 18px 16px;
   }
-
-  .gate-input-row {
-    flex-direction: column;
-  }
-
-  .gate-or {
-    display: none;
-  }
-
-  .gate-input-row.single {
-    flex-direction: row;
-  }
-
-  .invest-section {
-    padding-inline: 14px;
-  }
-
+  .gate-input-row { flex-direction: column; }
+  .gate-or { display: none; }
+  .gate-input-row.single { flex-direction: row; }
+  .invest-section { padding-inline: 14px; }
   .invest-copy,
-  .invest-form {
-    padding: 18px 14px 16px;
-  }
+  .invest-form { padding: 18px 14px 16px; }
 }
-
-/* =========================
-   BOOK VIEW 전체 가로 꽉 차게 + 화살표 재배치
-   ========================== */
-
-/* 배경 전체 */
-.pdf-book-section {
-  background: #000;
-  padding: 0;
-}
-
-/* 뷰포트 기준 세로 가운데 정렬 */
-.book-wrapper {
-  width: 100vw;                 /* 브라우저 가로 100% */
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 두 페이지 묶음 */
-.book {
-  position: relative;
-  width: 100%;
-  max-width: none;              /* max-width 제한 제거 → 가로 꽉 */
-  padding: 0 40px;              /* 좌우 여백만 살짝 */
-  display: flex;
-  gap: 28px;                    /* 두 페이지 사이 간격 */
-  box-sizing: border-box;
-}
-
-/* 각 페이지 박스 */
-.page-slot {
-  flex: 1;
-  height: 78vh;                 /* 화면 높이의 ~80% */
-  background: #050816;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.9);
-}
-
-.page-inner {
-  width: 100%;
-  height: 100%;
-}
-
-.page-inner img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;          /* 비율 유지 */
-  display: block;
-}
-
-/* 좌우 넘기기 화살표 공통 스타일 */
-.page-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 5;
-  width: 46px;
-  height: 46px;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  background: rgba(0, 0, 0, 0.75);
-  color: #fff;
-  font-size: 26px;
-  display: flex;
-  align-items:

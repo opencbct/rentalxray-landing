@@ -8,28 +8,28 @@
 </head>
 <body>
 
-  <!-- MAIN ACCESS CARD (3 logo + 폼) -->
+  <!-- ====== ACCESS GATE (3 LOGOS + FORMS) ====== -->
   <div class="gate-wide" id="accessGate">
     <div class="gate-inner-wide">
 
-      <!-- 3 LOGO – 개별 파일로 교체 -->
+      <!-- 3 LOGO -->
       <div class="logo-inside-card">
         <img src="../css/img/logorental.png" class="logo-single" alt="Rental X-Ray" />
-        <img src="../css/img/logoguide.png" class="logo-single" alt="GuideDoc" />
-        <img src="../css/img/logoview.png"  class="logo-single" alt="CBCT View" />
+        <img src="../css/img/logoguide.png"  class="logo-single" alt="GuideDoc" />
+        <img src="../css/img/logoview.png"   class="logo-single" alt="CBCT View" />
       </div>
 
-
+      <!-- MULTI-LANGUAGE NOTE -->
       <div class="lang-multiline">
         <div>This site is an information document for the dental X-ray rental service business. Please request a password to view the materials. This project also accepts cryptocurrency investments (USDT/BTC/ETH).</div>
         <div>このサイトは歯科用レントゲンレンタルサービス事業の説明書です。資料を閲覧するにはパスワードをご請求ください。</div>
         <div>Ce site est un document d'information concernant le service de location de radiographie dentaire. Veuillez demander un mot de passe pour consulter les documents. Ce projet accepte également les investissements en cryptomonnaie (USDT/BTC/ETH).</div>
         <div>本网站是关于牙科X光机租赁服务业务的说明文件。如需阅览资料，请索取密码。本项目也接受加密货币（USDT/BTC/ETH）投资。</div>
-        <div>Este sitio es un documento informativo sobre el negocio de servicios de alquiler de rayos X dentales. Por favor, solicite una contraseña para ver los materiales. Este proyecto también acepta inversiones en criptomonedas (USDT/BTC/ETH).</div>        
+        <div>Este sitio es un documento informativo sobre el negocio de servicios de alquiler de rayos X dentales. Por favor, solicite una contraseña para ver los materiales. Este proyecto también acepta inversiones en criptomonedas (USDT/BTC/ETH).</div>
         <div>이 사이트는 치과용 엑스레이 렌탈 서비스 사업에 대한 설명서입니다. 자료 열람을 원하시면 비밀번호를 요청해 주세요. 본 프로젝트는 코인(USDT/BTC/ETH) 투자도 가능합니다.</div>
       </div>
 
-      <!-- Request Password -->
+      <!-- REQUEST PASSWORD -->
       <form id="requestForm" class="gate-card-wide">
         <h2>Request Access Password</h2>
         <p class="gate-text">
@@ -47,7 +47,7 @@
         <p class="gate-helper" id="requestHelper"></p>
       </form>
 
-      <!-- Enter Password -->
+      <!-- ENTER PASSWORD -->
       <form id="passwordForm" class="gate-card-wide gate-password">
         <label for="passwordInput">Already have a password?</label>
 
@@ -63,48 +63,37 @@
     </div>
   </div>
 
-  <!-- 로그인 성공 후 보여줄 본문 (PDF + 투자 설명) -->
+  <!-- ====== MAIN CONTENT AFTER LOGIN ====== -->
   <div id="siteContent" class="site hidden">
     <main>
-      <!-- BOOK-STYLE PAGE VIEWER (1–2, 3–4, 5–6 …) -->
-      <!-- BOOK-STYLE IMAGE VIEWER (1–24 pages, 2 pages per spread) -->
+
+      <!-- ==== BOOK VIEWER (1–24 png, 2 pages per spread) ==== -->
       <section class="pdf-book-section">
         <div class="book-wrapper">
           <div class="book" id="bookViewer">
+
             <!-- LEFT PAGE -->
             <div class="page-slot page-left">
               <div class="page-inner">
-                <img
-                  id="pageImgLeft"
-                  src="../css/book/1.png"
-                  alt="Page 1"
-                />
+                <img id="pageImgLeft" src="../css/book/1.png" alt="Page 1" />
               </div>
             </div>
 
             <!-- RIGHT PAGE -->
             <div class="page-slot page-right">
               <div class="page-inner">
-                <img
-                  id="pageImgRight"
-                  src="../css/book/2.png"
-                  alt="Page 2"
-                />
+                <img id="pageImgRight" src="../css/book/2.png" alt="Page 2" />
               </div>
             </div>
 
-            <!-- NAV BUTTONS -->
-            <button class="page-nav prev" id="pagePrev" aria-label="Previous pages">
-              ‹
-            </button>
-            <button class="page-nav next" id="pageNext" aria-label="Next pages">
-              ›
-            </button>
+            <!-- NAV ARROWS -->
+            <button class="page-nav prev" id="pagePrev" aria-label="Previous pages">‹</button>
+            <button class="page-nav next" id="pageNext" aria-label="Next pages">›</button>
           </div>
         </div>
       </section>
 
-      <!-- 투자 방식 설명 + 메세지 박스 -->
+      <!-- ==== INVEST SECTION ==== -->
       <section class="invest-section" id="invest">
         <div class="invest-inner">
           <div class="invest-copy">
@@ -151,10 +140,10 @@
 
             <label for="investorMessage">Message to Rental X-Ray</label>
             <textarea
-            id="investorMessage"
-            rows="6"
-            placeholder="Example: I'm interested in a $100,000 ticket with 3–5 years. Please give me some guidance on the price of the investment, the guarantee, how to invest, and the business plan. Please attach a copy of the contract."
-          ></textarea>
+              id="investorMessage"
+              rows="6"
+              placeholder="Example: I'm interested in a $100,000 ticket with 3–5 years. Please give me some guidance on the price of the investment, the guarantee, how to invest, and the business plan. Please attach a copy of the contract."
+            ></textarea>
 
             <button type="submit" class="btn send-btn">
               <span class="btn-label">Send Message</span>
@@ -172,6 +161,7 @@
     </main>
   </div>
 
+  <!-- OUR MAIN SCRIPT ONLY (no jQuery, no turn.js) -->
   <script src="../script.js"></script>
 </body>
 </html>
