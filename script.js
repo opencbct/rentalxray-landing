@@ -1,10 +1,13 @@
-// ===========================
-// BASIC SETTINGS
-// ===========================
+// ==========================
+//  BASIC SETTINGS
+// ==========================
 const DEMO_PASSWORD = "RENTAL2025";
-const TOTAL_PAGES = 24; // ../css/book/1.png ~ 24.png
 
-// 실제 이메일 발송 대신 콘솔만 찍는 더미 함수
+// 0.png ~ 24.png  총 25페이지라고 가정
+const TOTAL_PAGES = 24;   // 0,1,2,...,24
+let currentLeftPage = 0;  // 항상 "왼쪽" 페이지 번호
+
+// 실제 메일 발송 대신 콘솔에만 찍는 더미 함수
 async function sendEmailToBen(subject, message) {
   console.log("📨 Sending email to ben@opencbct.com...");
   console.log("SUBJECT:", subject);
@@ -12,113 +15,82 @@ async function sendEmailToBen(subject, message) {
   return true;
 }
 
-// ===========================
-// BOOK VIEWER (커스텀 3D 플립)
-// ===========================
+// ==========================
+//  PAGE VIEWER LOGIC (0.png부터)
+// ==========================
+function createBookViewer() {
+  const leftImg  = document.getElementById("pageImgLeft");
+  const rightImg = document.getElementById("pageImgRight");
+  const btnPrev  = document.getElementById("pagePrev");
+  const btnNext  = document.getElementById("pageNext");
+
+  if (!leftImg || !rightImg || !btnPrev || !btnNext) return;
+
+  // 현재 currentLeftPage 값을 기준으로 이미지 교체
+  function renderPages() {
+    // 왼쪽
+    leftImg.src = `../css/book/${currentLeftPage}.png`;
+    leftImg.alt = `Page ${currentLeftPage}`;
+
+    // 오른쪽 페이지 번호
+    const rightPage = currentLeftPage + 1;
+
+    if (rightPage < TOTAL_PAGES) {
+      rightImg.src = `../css/book/${rightPage}.png`;
+      rightImg.alt = `Page ${rightPage}`;
+      rightImg.style.visibility = "visible";
+    } else {
+      // 마지막이 홀수 페이지일 경우 오른쪽은 숨김
+      rightImg.style.visibility = "hidden";
+    }
+
+    // 버튼 활성/비활성
+    btnPrev.disabled = currentLeftPage <= 0;
+    btnNext.disabled = currentLeftPage + 2 >= TOTAL_PAGES;
+  }
+
+  // 처음 렌더링 (0,1 페이지)
+  renderPages();
+
+  // ← 버튼
+  btnPrev.addEventListener("click", () => {
+    if (currentLeftPage >= 2) {
+      currentLeftPage -= 2;
+      renderPages();
+    }
+  });
+
+  // → 버튼
+  btnNext.addEventListener("click", () => {
+    if (currentLeftPage + 2 < TOTAL_PAGES) {
+      currentLeftPage += 2;
+      renderPages();
+    }
+  });
+}
+
+// ==========================
+//  MAIN: GATE + FORMS
+// ==========================
 document.addEventListener("DOMContentLoaded", () => {
-  // ---- GATE ELEMENTS ----
-  const accessGate = document.getElementById("accessGate");
+  const accessGate  = document.getElementById("accessGate");
   const siteContent = document.getElementById("siteContent");
 
-  const requestForm = document.getElementById("requestForm");
-  const requestEmail = document.getElementById("requestEmail");
-  const requestPhone = document.getElementById("requestPhone");
+  const requestForm   = document.getElementById("requestForm");
+  const requestEmail  = document.getElementById("requestEmail");
+  const requestPhone  = document.getElementById("requestPhone");
   const requestHelper = document.getElementById("requestHelper");
 
-  const passwordForm = document.getElementById("passwordForm");
+  const passwordForm  = document.getElementById("passwordForm");
   const passwordInput = document.getElementById("passwordInput");
   const passwordError = document.getElementById("passwordError");
 
   const investorMessageForm = document.getElementById("investorMessageForm");
-  const investorMessage = document.getElementById("investorMessage");
-  const sendBtn = document.querySelector(".send-btn");
-  const sentConfirm = document.getElementById("sentConfirm");
+  const investorMessage     = document.getElementById("investorMessage");
+  const sendBtn             = document.querySelector(".send-btn");
+  const sentConfirm         = document.getElementById("sentConfirm");
 
-  // ---- BOOK ELEMENTS ----
-  const pageImgLeft = document.getElementById("pageImgLeft");
-  const pageImgRight = document.getElementById("pageImgRight");
-  const pagePrevBtn = document.getElementById("pagePrev");
-  const pageNextBtn = document.getElementById("pageNext");
-
-  const pageLeftSlot = document.querySelector(".page-left .page-inner");
-  const pageRightSlot = document.querySelector(".page-right .page-inner");
-
-  let currentLeftPage = 1; // 1,3,5,...
-
-  function pagePath(n) {
-    return `../css/book/${n}.png`;
-  }
-
-  function showSpread(leftPageNumber) {
-    currentLeftPage = leftPageNumber;
-    const rightPageNumber = Math.min(leftPageNumber + 1, TOTAL_PAGES);
-
-    pageImgLeft.src = pagePath(leftPageNumber);
-    pageImgLeft.alt = `Page ${leftPageNumber}`;
-
-    pageImgRight.src = pagePath(rightPageNumber);
-    pageImgRight.alt = `Page ${rightPageNumber}`;
-  }
-
-  // 초기: 1–2 페이지
-  if (pageImgLeft && pageImgRight) {
-    showSpread(1);
-  }
-
-  // 앞으로 (다음 페이지 쌍)
-  function goNext() {
-    if (currentLeftPage + 1 >= TOTAL_PAGES) return; // 23–24가 마지막
-    if (!pageRightSlot) return;
-
-    pageRightSlot.classList.add("flip-next");
-
-    pageRightSlot.addEventListener(
-      "animationend",
-      () => {
-        pageRightSlot.classList.remove("flip-next");
-        showSpread(currentLeftPage + 2);
-        pageRightSlot.style.transform = "rotateY(0deg)";
-      },
-      { once: true }
-    );
-  }
-
-  // 뒤로 (이전 페이지 쌍)
-  function goPrev() {
-    if (currentLeftPage <= 1) return;
-    if (!pageLeftSlot) return;
-
-    pageLeftSlot.classList.add("flip-prev");
-
-    pageLeftSlot.addEventListener(
-      "animationend",
-      () => {
-        pageLeftSlot.classList.remove("flip-prev");
-        showSpread(currentLeftPage - 2);
-        pageLeftSlot.style.transform = "rotateY(0deg)";
-      },
-      { once: true }
-    );
-  }
-
-  // 버튼 이벤트
-  if (pageNextBtn) pageNextBtn.addEventListener("click", goNext);
-  if (pagePrevBtn) pagePrevBtn.addEventListener("click", goPrev);
-
-  // 페이지 자체 클릭
-  if (pageRightSlot) pageRightSlot.addEventListener("click", goNext);
-  if (pageLeftSlot) pageLeftSlot.addEventListener("click", goPrev);
-
-  // 키보드 ← →
-  document.addEventListener("keydown", (e) => {
-    if (siteContent.classList.contains("hidden")) return; // gate 안 열렸으면 무시
-    if (e.key === "ArrowRight") goNext();
-    if (e.key === "ArrowLeft") goPrev();
-  });
-
-  // ===========================
-  // 1) PASSWORD REQUEST
-  // ===========================
+  // 1) PASSWORD REQUEST (email/phone 수집)
   if (requestForm) {
     requestForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -146,13 +118,11 @@ Time: ${new Date().toLocaleString()}
         "If authorized, your password will be sent to your email/phone.";
       requestHelper.style.color = "#9fb4e8";
 
-      passwordInput && passwordInput.focus();
+      if (passwordInput) passwordInput.focus();
     });
   }
 
-  // ===========================
-  // 2) PASSWORD VALIDATION → GATE OPEN
-  // ===========================
+  // 2) PASSWORD CHECK → GATE OPEN + BOOK VIEWER INIT
   if (passwordForm) {
     passwordForm.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -163,16 +133,16 @@ Time: ${new Date().toLocaleString()}
       if (pw === DEMO_PASSWORD) {
         accessGate.classList.add("hidden");
         siteContent.classList.remove("hidden");
-        // 책은 이미 세팅되어 있으니 따로 init 필요 없음
+
+        // ✅ 로그인 성공 후 책 뷰어 시작 (0.png,1.png)
+        createBookViewer();
       } else {
         passwordError.textContent = "Invalid password.";
       }
     });
   }
 
-  // ===========================
-  // 3) INVESTOR MESSAGE → email to Ben
-  // ===========================
+  // 3) INVESTOR MESSAGE
   if (investorMessageForm) {
     investorMessageForm.addEventListener("submit", async (e) => {
       e.preventDefault();

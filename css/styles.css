@@ -49,7 +49,9 @@ body {
   margin: 30px 0 18px;
   flex-wrap: nowrap;
   perspective: 1200px;
+  /* ✅ 여기 animation: ... 이 없어야 합니다 */
 }
+
 
 .logo-single {
   height: 110px;
@@ -62,12 +64,44 @@ body {
   transform-origin: center center;
   backface-visibility: hidden;
   cursor: pointer;
+
+  /* 🔥 속도를 크게 높임 (24초 → 14초) */
+  animation: logo-spin 14s linear infinite;
+}
+
+.logo-single:nth-child(1) {
+  animation-duration: 14s;   /* 기본 */
+}
+
+.logo-single:nth-child(2) {
+  animation-duration: 16s;   /* 약간 느림 */
+  animation-direction: reverse;
+}
+
+.logo-single:nth-child(3) {
+  animation-duration: 18s;   /* 가장 느림 */
 }
 
 .logo-single:hover {
   transform: rotateY(180deg) rotateX(8deg) scale(1.03);
   filter: drop-shadow(0 22px 40px rgba(0, 0, 0, 0.9));
 }
+
+/* ===== LOGO ORBIT ANIMATION ===== */
+
+/* ===== 각 로고 자전 애니메이션 ===== */
+@keyframes logo-spin {
+  0% {
+    transform: rotateY(0deg) rotateX(12deg);
+  }
+  50% {
+    transform: rotateY(180deg) rotateX(12deg);   /* 뒤로 넘어가는 중간 */
+  }
+  100% {
+    transform: rotateY(360deg) rotateX(12deg);
+  }
+}
+
 
 @media (max-width: 600px) {
   .logo-inside-card {
