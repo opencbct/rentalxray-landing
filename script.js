@@ -1,178 +1,217 @@
-// ==========================
-//  BASIC SETTINGS
-// ==========================
-const DEMO_PASSWORD = "RENTAL2025";
+document.addEventListener("DOMContentLoaded", function () {
+  // ===============================
+  // 설정값
+  // ===============================
+  var DEMO_PASSWORD = "RENTAL2025";
+  // book 폴더 안에 0.png ~ 23.png (총 24장)이라고 가정
+  var TOTAL_PAGES = 24;
 
-// 0.png ~ 24.png  총 25페이지라고 가정
-const TOTAL_PAGES = 24;   // 0,1,2,...,24
-let currentLeftPage = 0;  // 항상 "왼쪽" 페이지 번호
+  var currentLeft = 0;   // 왼쪽 페이지 인덱스
+  var currentRight = 1;  // 오른쪽 페이지 인덱스
 
-// 실제 메일 발송 대신 콘솔에만 찍는 더미 함수
-async function sendEmailToBen(subject, message) {
-  console.log("📨 Sending email to ben@opencbct.com...");
-  console.log("SUBJECT:", subject);
-  console.log("MESSAGE:", message);
-  return true;
-}
+  // ===============================
+  // DOM 요소
+  // ===============================
+  var gateEl          = document.getElementById("accessGate");
+  var siteEl          = document.getElementById("siteContent");
 
-// ==========================
-//  PAGE VIEWER LOGIC (0.png부터)
-// ==========================
-function createBookViewer() {
-  const leftImg  = document.getElementById("pageImgLeft");
-  const rightImg = document.getElementById("pageImgRight");
-  const btnPrev  = document.getElementById("pagePrev");
-  const btnNext  = document.getElementById("pageNext");
+  var requestForm     = document.getElementById("requestForm");
+  var requestEmail    = document.getElementById("requestEmail");
+  var requestPhone    = document.getElementById("requestPhone");
+  var requestHelper   = document.getElementById("requestHelper");
 
-  if (!leftImg || !rightImg || !btnPrev || !btnNext) return;
+  var passwordForm    = document.getElementById("passwordForm");
+  var passwordInput   = document.getElementById("passwordInput");
+  var passwordError   = document.getElementById("passwordError");
 
-  // 현재 currentLeftPage 값을 기준으로 이미지 교체
-  function renderPages() {
-    // 왼쪽
-    leftImg.src = `../css/book/${currentLeftPage}.png`;
-    leftImg.alt = `Page ${currentLeftPage}`;
+  var pageImgLeft     = document.getElementById("pageImgLeft");
+  var pageImgRight    = document.getElementById("pageImgRight");
+  var pagePrevBtn     = document.getElementById("pagePrev");
+  var pageNextBtn     = document.getElementById("pageNext");
 
-    // 오른쪽 페이지 번호
-    const rightPage = currentLeftPage + 1;
+  var pageLeftSlot    = document.querySelector(".page-left");
+  var pageRightSlot   = document.querySelector(".page-right");
 
-    if (rightPage < TOTAL_PAGES) {
-      rightImg.src = `../css/book/${rightPage}.png`;
-      rightImg.alt = `Page ${rightPage}`;
-      rightImg.style.visibility = "visible";
-    } else {
-      // 마지막이 홀수 페이지일 경우 오른쪽은 숨김
-      rightImg.style.visibility = "hidden";
-    }
+  var investorForm    = document.getElementById("investorMessageForm");
+  var investorMessage = document.getElementById("investorMessage");
+  var sendBtn         = investorForm
+    ? investorForm.querySelector(".send-btn")
+    : null;
+  var sentConfirm     = document.getElementById("sentConfirm");
 
-    // 버튼 활성/비활성
-    btnPrev.disabled = currentLeftPage <= 0;
-    btnNext.disabled = currentLeftPage + 2 >= TOTAL_PAGES;
+  // ===============================
+  // 유틸: 페이지 이미지 경로
+  // ===============================
+  function pageSrc(index) {
+    return "../css/book/" + index + ".png";
   }
 
-  // 처음 렌더링 (0,1 페이지)
-  renderPages();
+  // ===============================
+  // BOOK: 페이지 업데이트
+  // ===============================
+  function updatePages() {
+    if (!pageImgLeft || !pageImgRight) return;
 
-  // ← 버튼
-  btnPrev.addEventListener("click", () => {
-    if (currentLeftPage >= 2) {
-      currentLeftPage -= 2;
-      renderPages();
+    if (currentLeft < 0) currentLeft = 0;
+    if (currentRight >= TOTAL_PAGES) currentRight = TOTAL_PAGES - 1;
+
+    pageImgLeft.src  = pageSrc(currentLeft);
+    pageImgLeft.alt  = "Page " + currentLeft;
+    pageImgRight.src = pageSrc(currentRight);
+    pageImgRight.alt = "Page " + currentRight;
+
+    if (pagePrevBtn) {
+      pagePrevBtn.disabled = currentLeft <= 0;
+      pagePrevBtn.style.opacity = pagePrevBtn.disabled ? 0.35 : 0.95;
     }
-  });
-
-  // → 버튼
-  btnNext.addEventListener("click", () => {
-    if (currentLeftPage + 2 < TOTAL_PAGES) {
-      currentLeftPage += 2;
-      renderPages();
+    if (pageNextBtn) {
+      pageNextBtn.disabled = currentRight >= TOTAL_PAGES - 1;
+      pageNextBtn.style.opacity = pageNextBtn.disabled ? 0.35 : 0.95;
     }
-  });
-}
+  }
 
-// ==========================
-//  MAIN: GATE + FORMS
-// ==========================
-document.addEventListener("DOMContentLoaded", () => {
-  const accessGate  = document.getElementById("accessGate");
-  const siteContent = document.getElementById("siteContent");
+  // ===============================
+  // BOOK: 다음/이전 페이지 (파도치는 flip)
+  // ===============================
+    // 애니메이션 중복 방지 플래그
+  var isFlipping = false;
 
-  const requestForm   = document.getElementById("requestForm");
-  const requestEmail  = document.getElementById("requestEmail");
-  const requestPhone  = document.getElementById("requestPhone");
-  const requestHelper = document.getElementById("requestHelper");
+  function goNext() {
+    if (isFlipping) return;
+    if (currentRight >= TOTAL_PAGES - 1) return;
+    if (!pageRightSlot) return;
 
-  const passwordForm  = document.getElementById("passwordForm");
-  const passwordInput = document.getElementById("passwordInput");
-  const passwordError = document.getElementById("passwordError");
+    isFlipping = true;
+    pageRightSlot.classList.add("flip-next");
 
-  const investorMessageForm = document.getElementById("investorMessageForm");
-  const investorMessage     = document.getElementById("investorMessage");
-  const sendBtn             = document.querySelector(".send-btn");
-  const sentConfirm         = document.getElementById("sentConfirm");
+    setTimeout(function () {
+      pageRightSlot.classList.remove("flip-next");
+      currentLeft  += 2;
+      currentRight += 2;
+      updatePages();
+      isFlipping = false;
+    }, 700); // CSS 애니메이션 시간과 동일
+  }
 
-  // 1) PASSWORD REQUEST (email/phone 수집)
+  function goPrev() {
+    if (isFlipping) return;
+    if (currentLeft <= 0) return;
+    if (!pageLeftSlot) return;
+
+    isFlipping = true;
+    pageLeftSlot.classList.add("flip-prev");
+
+    setTimeout(function () {
+      pageLeftSlot.classList.remove("flip-prev");
+      currentLeft  -= 2;
+      currentRight -= 2;
+      updatePages();
+      isFlipping = false;
+    }, 700);
+  }
+
+
+  // ===============================
+  // ACCESS GATE: 비밀번호 요청 (데모용)
+  // ===============================
   if (requestForm) {
-    requestForm.addEventListener("submit", async (e) => {
+    requestForm.addEventListener("submit", function (e) {
       e.preventDefault();
 
-      const email = requestEmail.value.trim();
-      const phone = requestPhone.value.trim();
+      var email = requestEmail ? requestEmail.value.trim() : "";
+      var phone = requestPhone ? requestPhone.value.trim() : "";
 
       if (!email && !phone) {
+        if (requestHelper) {
+          requestHelper.textContent =
+            "이메일 또는 휴대폰 번호 중 하나는 반드시 입력해 주세요.";
+          requestHelper.style.color = "#ff5c7a";
+        }
+        return;
+      }
+
+      if (requestHelper) {
         requestHelper.textContent =
-          "Please enter either email or mobile number.";
-        requestHelper.style.color = "#ff5c7a";
-        return;
+          "감사합니다. 데모 버전에서는 아래 비밀번호(RENTAL2025)를 바로 사용해 주세요.";
+        requestHelper.style.color = "#a5b0d4";
       }
-
-      const msg = `
-📌 PASSWORD REQUEST
-Email: ${email || "none"}
-Phone: ${phone || "none"}
-Time: ${new Date().toLocaleString()}
-`;
-
-      await sendEmailToBen("PASSWORD REQUEST", msg);
-
-      requestHelper.textContent =
-        "If authorized, your password will be sent to your email/phone.";
-      requestHelper.style.color = "#9fb4e8";
-
-      if (passwordInput) passwordInput.focus();
     });
   }
 
-  // 2) PASSWORD CHECK → GATE OPEN + BOOK VIEWER INIT
+  // ===============================
+  // ACCESS GATE: 비밀번호 체크
+  // ===============================
   if (passwordForm) {
-    passwordForm.addEventListener("submit", (e) => {
+    passwordForm.addEventListener("submit", function (e) {
       e.preventDefault();
-      passwordError.textContent = "";
+      var val = passwordInput ? passwordInput.value.trim() : "";
 
-      const pw = passwordInput.value.trim();
-
-      if (pw === DEMO_PASSWORD) {
-        accessGate.classList.add("hidden");
-        siteContent.classList.remove("hidden");
-
-        // ✅ 로그인 성공 후 책 뷰어 시작 (0.png,1.png)
-        createBookViewer();
-      } else {
-        passwordError.textContent = "Invalid password.";
-      }
-    });
-  }
-
-  // 3) INVESTOR MESSAGE
-  if (investorMessageForm) {
-    investorMessageForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const msg = investorMessage.value.trim();
-      if (!msg) {
-        investorMessage.focus();
+      if (!val) {
+        if (passwordError) {
+          passwordError.textContent = "비밀번호를 입력해 주세요.";
+        }
         return;
       }
 
-      const emailMessage = `
-📌 INVESTOR MESSAGE
--------------------------
-${msg}
--------------------------
-Sent: ${new Date().toLocaleString()}
-`;
+      if (val !== DEMO_PASSWORD) {
+        if (passwordError) {
+          passwordError.textContent =
+            "비밀번호가 올바르지 않습니다. (힌트: RENTAL2025)";
+        }
+        return;
+      }
 
-      await sendEmailToBen("INVESTOR MESSAGE", emailMessage);
+      // 성공: 게이트 숨기고 메인 컨텐츠 표시
+      if (passwordError) passwordError.textContent = "";
 
-      sendBtn.classList.add("sent");
-      sentConfirm.classList.add("visible");
+      if (gateEl) gateEl.classList.add("hidden");
+      if (siteEl) siteEl.classList.remove("hidden");
 
-      setTimeout(() => {
-        investorMessage.value = "";
-      }, 800);
-
-      setTimeout(() => {
-        sendBtn.classList.remove("sent");
-      }, 3000);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     });
   }
+
+  // ===============================
+  // INVEST 폼: 프론트 데모 애니메이션
+  // ===============================
+  if (investorForm) {
+    investorForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      var msg = investorMessage ? investorMessage.value.trim() : "";
+      if (!msg) {
+        alert("문의 내용을 간단히라도 적어 주세요.");
+        return;
+      }
+
+      // 실제로는 서버로 POST
+      if (sendBtn) {
+        sendBtn.classList.add("sent");
+      }
+      if (sentConfirm) {
+        sentConfirm.classList.add("visible");
+      }
+    });
+  }
+
+  // ===============================
+  // BOOK: 이벤트 연결
+  // ===============================
+  if (pageNextBtn) {
+    pageNextBtn.addEventListener("click", goNext);
+  }
+  if (pagePrevBtn) {
+    pagePrevBtn.addEventListener("click", goPrev);
+  }
+
+  // 페이지 클릭으로도 넘기기
+  if (pageRightSlot) {
+    pageRightSlot.addEventListener("click", goNext);
+  }
+  if (pageLeftSlot) {
+    pageLeftSlot.addEventListener("click", goPrev);
+  }
+
+  // 초기 페이지 세팅
+  updatePages();
 });
