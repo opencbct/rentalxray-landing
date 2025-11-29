@@ -2,12 +2,17 @@ document.addEventListener("DOMContentLoaded", function () {
   // ===============================
   // 설정값
   // ===============================
-  var DEMO_PASSWORD = "RENTAL2025";
-  // book 폴더 안에 0.png ~ 23.png (총 24장)이라고 가정
-  var TOTAL_PAGES = 25;
+var DEMO_PASSWORD = "RENTAL2025";
+// 0.png ~ 24.png => 총 25페이지
+var TOTAL_PAGES = 25;
 
-  var currentLeft = 0;   // 왼쪽 페이지 인덱스
-  var currentRight = 1;  // 오른쪽 페이지 인덱스
+// ❌ 기존: currentLeft, currentRight 둘 다 사용
+// var currentLeft  = 0;
+// var currentRight = 1;
+
+// ✅ 교체: 현재 스프레드의 "왼쪽 페이지" 인덱스만 관리
+var currentIndex = 0; // 0, 2, 4, ... 이런 식으로 증가
+
 
   // ===============================
   // DOM 요소
@@ -50,65 +55,81 @@ document.addEventListener("DOMContentLoaded", function () {
   // BOOK: 페이지 업데이트
   // ===============================
   function updatePages() {
-    if (!pageImgLeft || !pageImgRight) return;
+  if (!pageImgLeft || !pageImgRight) return;
 
-    if (currentLeft < 0) currentLeft = 0;
-    if (currentRight >= TOTAL_PAGES) currentRight = TOTAL_PAGES - 1;
+  // currentIndex 범위 보정
+  if (currentIndex < 0) currentIndex = 0;
 
-    pageImgLeft.src  = pageSrc(currentLeft);
-    pageImgLeft.alt  = "Page " + currentLeft;
-    pageImgRight.src = pageSrc(currentRight);
-    pageImgRight.alt = "Page " + currentRight;
+  // 마지막 스프레드의 최대 왼쪽 인덱스 (짝수 기준)
+  var maxLeftIndex = (TOTAL_PAGES - 1) - 1; // 23 (0~24이면 마지막 스프레드는 23-24)
 
-    if (pagePrevBtn) {
-      pagePrevBtn.disabled = currentLeft <= 0;
-      pagePrevBtn.style.opacity = pagePrevBtn.disabled ? 0.35 : 0.95;
-    }
-    if (pageNextBtn) {
-      pageNextBtn.disabled = currentRight >= TOTAL_PAGES - 1;
-      pageNextBtn.style.opacity = pageNextBtn.disabled ? 0.35 : 0.95;
-    }
+  if (currentIndex > maxLeftIndex) {
+    currentIndex = maxLeftIndex;
   }
+
+  var leftIndex  = currentIndex;
+  var rightIndex = Math.min(currentIndex + 1, TOTAL_PAGES - 1);
+
+  pageImgLeft.src = pageSrc(leftIndex);
+  pageImgLeft.alt = "Page " + leftIndex;
+
+  pageImgRight.src = pageSrc(rightIndex);
+  pageImgRight.alt = "Page " + rightIndex;
+
+  // 화살표 활성/비활성
+  if (pagePrevBtn) {
+    pagePrevBtn.disabled = currentIndex <= 0;
+    pagePrevBtn.style.opacity = pagePrevBtn.disabled ? 0.35 : 0.95;
+  }
+
+  if (pageNextBtn) {
+    pageNextBtn.disabled = currentIndex >= maxLeftIndex;
+    pageNextBtn.style.opacity = pageNextBtn.disabled ? 0.35 : 0.95;
+  }
+}
+
 
   // ===============================
   // BOOK: 다음/이전 페이지 (파도치는 flip)
   // ===============================
     // 애니메이션 중복 방지 플래그
-  var isFlipping = false;
+  // 애니메이션 중복 방지 플래그
+var isFlipping = false;
 
-  function goNext() {
-    if (isFlipping) return;
-    if (currentRight >= TOTAL_PAGES - 1) return;
-    if (!pageRightSlot) return;
+function goNext() {
+  if (isFlipping) return;
 
-    isFlipping = true;
-    pageRightSlot.classList.add("flip-next");
+  var maxLeftIndex = (TOTAL_PAGES - 1) - 1; // 23
+  if (currentIndex >= maxLeftIndex) return;
+  if (!pageRightSlot) return;
 
-    setTimeout(function () {
-      pageRightSlot.classList.remove("flip-next");
-      currentLeft  += 2;
-      currentRight += 2;
-      updatePages();
-      isFlipping = false;
-    }, 700); // CSS 애니메이션 시간과 동일
-  }
+  isFlipping = true;
+  pageRightSlot.classList.add("flip-next");
 
-  function goPrev() {
-    if (isFlipping) return;
-    if (currentLeft <= 0) return;
-    if (!pageLeftSlot) return;
+  setTimeout(function () {
+    pageRightSlot.classList.remove("flip-next");
+    currentIndex += 2;   // 다음 스프레드(왼쪽 페이지 +2)
+    updatePages();
+    isFlipping = false;
+  }, 700); // CSS 애니메이션 시간과 맞추기
+}
 
-    isFlipping = true;
-    pageLeftSlot.classList.add("flip-prev");
+function goPrev() {
+  if (isFlipping) return;
+  if (currentIndex <= 0) return;
+  if (!pageLeftSlot) return;
 
-    setTimeout(function () {
-      pageLeftSlot.classList.remove("flip-prev");
-      currentLeft  -= 2;
-      currentRight -= 2;
-      updatePages();
-      isFlipping = false;
-    }, 700);
-  }
+  isFlipping = true;
+  pageLeftSlot.classList.add("flip-prev");
+
+  setTimeout(function () {
+    pageLeftSlot.classList.remove("flip-prev");
+    currentIndex -= 2;   // 이전 스프레드(왼쪽 페이지 -2)
+    updatePages();
+    isFlipping = false;
+  }, 700);
+}
+
 
 
   // ===============================
