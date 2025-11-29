@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // ===============================
   var DEMO_PASSWORD = "RENTAL2025";
   // book 폴더 안에 0.png ~ 23.png (총 24장)이라고 가정
-  var TOTAL_PAGES = 24;
+  var TOTAL_PAGES = 25;
 
   var currentLeft = 0;   // 왼쪽 페이지 인덱스
   var currentRight = 1;  // 오른쪽 페이지 인덱스
