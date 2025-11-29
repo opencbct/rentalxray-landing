@@ -11,7 +11,6 @@ var TOTAL_PAGES = 25;
 //    처음: 왼쪽 0, 오른쪽 1
 var currentRight = 1;
 
-
 // ✅ 교체: 현재 스프레드의 "왼쪽 페이지" 인덱스만 관리
 var currentIndex = 0; // 0, 2, 4, ... 이런 식으로 증가
 
@@ -63,8 +62,12 @@ var currentIndex = 0; // 0, 2, 4, ... 이런 식으로 증가
   if (currentRight < 1) currentRight = 1;
   if (currentRight > TOTAL_PAGES - 1) currentRight = TOTAL_PAGES - 1;
 
-  var leftIndex  = currentRight - 1; // 항상 오른쪽 바로 앞 페이지
+  
+  var leftIndex  = currentRight - 1;
   var rightIndex = currentRight;
+
+  pageImgLeft.src  = pageSrc(leftIndex);
+  pageImgRight.src = pageSrc(rightIndex);
 
   // 왼쪽 페이지
   pageImgLeft.src = pageSrc(leftIndex);
@@ -75,23 +78,28 @@ var currentIndex = 0; // 0, 2, 4, ... 이런 식으로 증가
   pageImgRight.alt = "Page " + rightIndex;
 
   // === 화살표 상태 ===
+    // === 화살표 상태 ===
   if (pagePrevBtn) {
-    // 처음(0|1)에서는 거의 안 보이게
-    pagePrevBtn.disabled = currentRight <= 1;
-
-    // 마지막 펼침에서는 아예 숨기기 (요청하신 부분)
-    if (currentRight >= TOTAL_PAGES - 1) {
-      pagePrevBtn.style.opacity = 0;
+    // 👉 첫 펼침(0|1)에서는 왼쪽 화살표 숨김
+    if (currentRight <= 1) {
+      pagePrevBtn.disabled = true;
+      pagePrevBtn.style.visibility = "hidden";  // 완전히 안 보이게
     } else {
-      pagePrevBtn.style.opacity = pagePrevBtn.disabled ? 0.35 : 0.95;
+      pagePrevBtn.disabled = false;
+      pagePrevBtn.style.visibility = "visible";
     }
   }
 
   if (pageNextBtn) {
-    pageNextBtn.disabled = currentRight >= TOTAL_PAGES - 1;
-    pageNextBtn.style.opacity = pageNextBtn.disabled ? 0.35 : 0.95;
+    // 👉 마지막 펼침(마지막-1 | 마지막)에서는 오른쪽 화살표 숨김
+    if (currentRight >= TOTAL_PAGES - 1) {
+      pageNextBtn.disabled = true;
+      pageNextBtn.style.visibility = "hidden";
+    } else {
+      pageNextBtn.disabled = false;
+      pageNextBtn.style.visibility = "visible";
+    }
   }
-}
 
   // ===============================
   // BOOK: 다음/이전 페이지 (파도치는 flip)
