@@ -3,12 +3,14 @@ document.addEventListener("DOMContentLoaded", function () {
   // 설정값
   // ===============================
 var DEMO_PASSWORD = "RENTAL2025";
-// 0.png ~ 24.png => 총 25페이지
+
+// 0.png ~ 24.png (총 25장)
 var TOTAL_PAGES = 25;
 
-// ❌ 기존: currentLeft, currentRight 둘 다 사용
-// var currentLeft  = 0;
-// var currentRight = 1;
+// ✅ 현재 보이는 "오른쪽" 페이지 번호
+//    처음: 왼쪽 0, 오른쪽 1
+var currentRight = 1;
+
 
 // ✅ 교체: 현재 스프레드의 "왼쪽 페이지" 인덱스만 관리
 var currentIndex = 0; // 0, 2, 4, ... 이런 식으로 증가
@@ -57,50 +59,51 @@ var currentIndex = 0; // 0, 2, 4, ... 이런 식으로 증가
   function updatePages() {
   if (!pageImgLeft || !pageImgRight) return;
 
-  // currentIndex 범위 보정
-  if (currentIndex < 0) currentIndex = 0;
+  // currentRight 범위 보정 (오른쪽은 최소 1, 최대 TOTAL_PAGES - 1)
+  if (currentRight < 1) currentRight = 1;
+  if (currentRight > TOTAL_PAGES - 1) currentRight = TOTAL_PAGES - 1;
 
-  // 마지막 스프레드의 최대 왼쪽 인덱스 (짝수 기준)
-  var maxLeftIndex = (TOTAL_PAGES - 1) - 1; // 23 (0~24이면 마지막 스프레드는 23-24)
+  var leftIndex  = currentRight - 1; // 항상 오른쪽 바로 앞 페이지
+  var rightIndex = currentRight;
 
-  if (currentIndex > maxLeftIndex) {
-    currentIndex = maxLeftIndex;
-  }
-
-  var leftIndex  = currentIndex;
-  var rightIndex = Math.min(currentIndex + 1, TOTAL_PAGES - 1);
-
+  // 왼쪽 페이지
   pageImgLeft.src = pageSrc(leftIndex);
   pageImgLeft.alt = "Page " + leftIndex;
 
+  // 오른쪽 페이지
   pageImgRight.src = pageSrc(rightIndex);
   pageImgRight.alt = "Page " + rightIndex;
 
-  // 화살표 활성/비활성
+  // === 화살표 상태 ===
   if (pagePrevBtn) {
-    pagePrevBtn.disabled = currentIndex <= 0;
-    pagePrevBtn.style.opacity = pagePrevBtn.disabled ? 0.35 : 0.95;
+    // 처음(0|1)에서는 거의 안 보이게
+    pagePrevBtn.disabled = currentRight <= 1;
+
+    // 마지막 펼침에서는 아예 숨기기 (요청하신 부분)
+    if (currentRight >= TOTAL_PAGES - 1) {
+      pagePrevBtn.style.opacity = 0;
+    } else {
+      pagePrevBtn.style.opacity = pagePrevBtn.disabled ? 0.35 : 0.95;
+    }
   }
 
   if (pageNextBtn) {
-    pageNextBtn.disabled = currentIndex >= maxLeftIndex;
+    pageNextBtn.disabled = currentRight >= TOTAL_PAGES - 1;
     pageNextBtn.style.opacity = pageNextBtn.disabled ? 0.35 : 0.95;
   }
 }
-
 
   // ===============================
   // BOOK: 다음/이전 페이지 (파도치는 flip)
   // ===============================
     // 애니메이션 중복 방지 플래그
   // 애니메이션 중복 방지 플래그
+// 애니메이션 중복 방지 플래그
 var isFlipping = false;
 
 function goNext() {
   if (isFlipping) return;
-
-  var maxLeftIndex = (TOTAL_PAGES - 1) - 1; // 23
-  if (currentIndex >= maxLeftIndex) return;
+  if (currentRight >= TOTAL_PAGES - 1) return;
   if (!pageRightSlot) return;
 
   isFlipping = true;
@@ -108,7 +111,10 @@ function goNext() {
 
   setTimeout(function () {
     pageRightSlot.classList.remove("flip-next");
-    currentIndex += 2;   // 다음 스프레드(왼쪽 페이지 +2)
+
+    // 🔥 한 장 앞으로 (겹치기)
+    currentRight += 1;
+
     updatePages();
     isFlipping = false;
   }, 700); // CSS 애니메이션 시간과 맞추기
@@ -116,7 +122,7 @@ function goNext() {
 
 function goPrev() {
   if (isFlipping) return;
-  if (currentIndex <= 0) return;
+  if (currentRight <= 1) return;
   if (!pageLeftSlot) return;
 
   isFlipping = true;
@@ -124,13 +130,14 @@ function goPrev() {
 
   setTimeout(function () {
     pageLeftSlot.classList.remove("flip-prev");
-    currentIndex -= 2;   // 이전 스프레드(왼쪽 페이지 -2)
+
+    // 🔥 한 장 뒤로 (겹치기)
+    currentRight -= 1;
+
     updatePages();
     isFlipping = false;
   }, 700);
 }
-
-
 
   // ===============================
   // ACCESS GATE: 비밀번호 요청 (데모용)
