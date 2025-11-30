@@ -105,7 +105,14 @@ body {
   .logo-single {
     height: 80px;
   }
+  .pdf-book-section {
+    padding: 20px 0 40px;
+  }
+  .page-slot {
+    height: 65vh;
+  }
 }
+
 
 /* ===============================
    LANG MULTILINE
@@ -123,6 +130,7 @@ body {
 .lang-multiline div {
   margin-bottom: 4px;
 }
+
 
 /* ===============================
    ACCESS GATE
@@ -396,30 +404,6 @@ body {
   opacity: 1;
 }
 
-/* 반응형 */
-@media (max-width: 1100px) {
-  .book-wrapper { padding-inline: 12px; }
-  .page-nav.prev { left: 4px; }
-  .page-nav.next { right: 4px; }
-}
-@media (max-width: 900px) {
-  .book {
-    flex-direction: column;
-    max-width: 100%;
-  }
-  .page-slot {
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85);
-    height: 70vh;
-  }
-  .page-nav { display: none; } /* 모바일에서는 페이지 탭해서 넘김 */
-  @media (max-width: 800px) {
-  #flipbook {
-    width: 100vw;
-    height: 85vh; /* 🔥 기존보다 크게 */
-  }
-}
-
-}
 
 /* ===============================
    PAGE FLIP 애니메이션 (파도치는 종이)
@@ -641,14 +625,25 @@ body {
 /* UTIL */
 .hidden { display: none !important; }
 
-@media (max-width: 600px) {
-  .gate-card-wide {
-    padding: 18px 16px;
+@media (max-width: 900px) {
+  .book {
+    flex-direction: column;
+    max-width: 100%;
   }
-  .gate-input-row { flex-direction: column; }
-  .gate-or { display: none; }
-  .gate-input-row.single { flex-direction: row; }
-  .invest-section { padding-inline: 14px; }
-  .invest-copy,
-  .invest-form { padding: 18px 14px 16px; }
+  .page-slot {
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.85);
+    height: 70vh;
+  }
+  .page-nav {
+    display: none; /* 모바일에서는 페이지 탭해서 넘김 */
+  }
 }
+
+/* 800px 이하에서는 flipbook 크기 조정 */
+@media (max-width: 800px) {
+  #flipbook {
+    width: 100vw;
+    height: 85vh;
+  }
+}
+
