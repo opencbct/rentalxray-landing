@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   // ===============================
   var DEMO_PASSWORD = "RENTAL2025";
   // 0.png ~ 24.png => 총 25 페이지
-  var TOTAL_PAGES = 25;
+  var TOTAL_PAGES = 31;
 
   // 플립뷰: 항상 "오른쪽 페이지 번호"만 관리 (왼쪽은 = 오른쪽 - 1)
   // 처음: (0 | 1)
