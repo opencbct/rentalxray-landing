@@ -1,14 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
   // ===============================
-  // 설정값
-  // ===============================
-  var DEMO_PASSWORD = "RENTAL2025";
-  // 0.png ~ 24.png => 총 25 페이지
-  var TOTAL_PAGES = 33;
+// 설정값
+var DEMO_PASSWORD = "RENTAL2025";
 
-  // 플립뷰: 항상 "오른쪽 페이지 번호"만 관리 (왼쪽은 = 오른쪽 - 1)
-  // 처음: (0 | 1)
-  var currentRight = -2;
+// -2.png ~ 30.png 까지 사용
+var MIN_RIGHT = -1; // 처음 오른쪽 페이지
+var MAX_RIGHT = 30; // 마지막 오른쪽 페이지
+
+// 처음 펼침: (-2 | -1)
+var currentRight = MIN_RIGHT;
+
 
   // ===============================
   // DOM 요소
@@ -51,90 +52,95 @@ document.addEventListener("DOMContentLoaded", function () {
   // ===============================
   // BOOK: 페이지 & 화살표 업데이트
   // ===============================
-  function updatePages() {
-    if (!pageImgLeft || !pageImgRight) return;
+function updatePages() {
+  if (!pageImgLeft || !pageImgRight) return;
 
-    // currentRight 범위 보정
-    if (currentRight < 1) currentRight = 1;
-    if (currentRight > TOTAL_PAGES - 1) currentRight = TOTAL_PAGES - 1;
+  // 🔥 오른쪽 페이지 범위를 -1 ~ 30 으로 고정
+  if (currentRight < MIN_RIGHT) currentRight = MIN_RIGHT;
+  if (currentRight > MAX_RIGHT) currentRight = MAX_RIGHT;
 
-    var leftIndex  = currentRight - 1;           // 항상 오른쪽 앞장
-    var rightIndex = currentRight;
+  var leftIndex  = currentRight - 1; // 왼쪽은 항상 오른쪽 - 1
+  var rightIndex = currentRight;
 
-    // 왼쪽 페이지
-    pageImgLeft.src = pageSrc(leftIndex);
-    pageImgLeft.alt = "Page " + leftIndex;
+  // 왼쪽 페이지
+  pageImgLeft.src = pageSrc(leftIndex);
+  pageImgLeft.alt = "Page " + leftIndex;
 
-    // 오른쪽 페이지
-    pageImgRight.src = pageSrc(rightIndex);
-    pageImgRight.alt = "Page " + rightIndex;
+  // 오른쪽 페이지
+  pageImgRight.src = pageSrc(rightIndex);
+  pageImgRight.alt = "Page " + rightIndex;
 
-    // === 화살표 상태 ===
-    if (pagePrevBtn) {
-      // 첫 펼침(0|1)에서만 왼쪽 화살표 숨김
-      if (currentRight <= 1) {
-        pagePrevBtn.disabled = true;
-        pagePrevBtn.style.visibility = "hidden";
-      } else {
-        pagePrevBtn.disabled = false;
-        pagePrevBtn.style.visibility = "visible";
-      }
-    }
-
-    if (pageNextBtn) {
-      // 마지막 펼침(23|24)에서 오른쪽 화살표 숨김
-      if (currentRight >= TOTAL_PAGES - 1) {
-        pageNextBtn.disabled = true;
-        pageNextBtn.style.visibility = "hidden";
-      } else {
-        pageNextBtn.disabled = false;
-        pageNextBtn.style.visibility = "visible";
-      }
+  // === 화살표 상태 ===
+  if (pagePrevBtn) {
+    // 첫 펼침 (-2 | -1) 에서만 왼쪽 화살표 숨김
+    if (currentRight <= MIN_RIGHT) {
+      pagePrevBtn.disabled = true;
+      pagePrevBtn.style.visibility = "hidden";
+    } else {
+      pagePrevBtn.disabled = false;
+      pagePrevBtn.style.visibility = "visible";
     }
   }
+
+  if (pageNextBtn) {
+    // 마지막 펼침 (29 | 30) 에서 오른쪽 화살표 숨김
+    if (currentRight >= MAX_RIGHT) {
+      pageNextBtn.disabled = true;
+      pageNextBtn.style.visibility = "hidden";
+    } else {
+      pageNextBtn.disabled = false;
+      pageNextBtn.style.visibility = "visible";
+    }
+  }
+}
+
 
   // ===============================
   // BOOK: 다음/이전 페이지 (한 장씩 겹치며 이동)
   // ===============================
-  var isFlipping = false;
+  // ===============================
+// BOOK: 다음/이전 페이지 (한 장씩 겹치며 이동)
+// ===============================
+var isFlipping = false;
 
-  function goNext() {
-    if (isFlipping) return;
-    if (currentRight >= TOTAL_PAGES - 1) return;
-    if (!pageRightSlot) return;
+function goNext() {
+  if (isFlipping) return;
+  if (currentRight >= MAX_RIGHT) return;  // ✅ TOTAL_PAGES 대신 MAX_RIGHT 사용
+  if (!pageRightSlot) return;
 
-    isFlipping = true;
-    pageRightSlot.classList.add("flip-next");
+  isFlipping = true;
+  pageRightSlot.classList.add("flip-next");
 
-    setTimeout(function () {
-      pageRightSlot.classList.remove("flip-next");
+  setTimeout(function () {
+    pageRightSlot.classList.remove("flip-next");
 
-      // 한 장 앞으로: (0|1) → (1|2) → (2|3) ...
-      currentRight += 1;
+    // 한 장 앞으로: (-2|-1) → (-1|0) → (0|1) ...
+    currentRight += 1;
 
-      updatePages();
-      isFlipping = false;
-    }, 700); // CSS 애니메이션 시간과 맞추기
-  }
+    updatePages();
+    isFlipping = false;
+  }, 700);
+}
 
-  function goPrev() {
-    if (isFlipping) return;
-    if (currentRight <= 1) return;
-    if (!pageLeftSlot) return;
+function goPrev() {
+  if (isFlipping) return;
+  if (currentRight <= MIN_RIGHT) return;  // ✅ 1 대신 MIN_RIGHT 사용
+  if (!pageLeftSlot) return;
 
-    isFlipping = true;
-    pageLeftSlot.classList.add("flip-prev");
+  isFlipping = true;
+  pageLeftSlot.classList.add("flip-prev");
 
-    setTimeout(function () {
-      pageLeftSlot.classList.remove("flip-prev");
+  setTimeout(function () {
+    pageLeftSlot.classList.remove("flip-prev");
 
-      // 한 장 뒤로: (3|4) → (2|3) ...
-      currentRight -= 1;
+    // 한 장 뒤로
+    currentRight -= 1;
 
-      updatePages();
-      isFlipping = false;
-    }, 700);
-  }
+    updatePages();
+    isFlipping = false;
+  }, 700);
+}
+
 
   // ===============================
   // ACCESS GATE: 비밀번호 요청 (데모용)
@@ -166,39 +172,49 @@ document.addEventListener("DOMContentLoaded", function () {
   // ===============================
   // ACCESS GATE: 비밀번호 체크
   // ===============================
-  if (passwordForm) {
-    passwordForm.addEventListener("submit", function (e) {
-      e.preventDefault();
+  // ===============================
+// ACCESS GATE: 비밀번호 체크 (단순/안전 버전)
+// ===============================
+if (passwordForm) {
+  passwordForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-      var val = passwordInput ? passwordInput.value : "";
-      if (val == null) val = "";
-      val = val.trim();
+    // 입력값 읽기
+    var val = (passwordInput && passwordInput.value) ? passwordInput.value : "";
+    val = val.trim();  // 앞뒤 공백 제거
 
-      if (!val) {
-        if (passwordError) {
-          passwordError.textContent = "비밀번호를 입력해 주세요.";
-        }
-        return;
+    // 디버깅용 로그 (Console에서 확인 가능)
+    console.log("RAW INPUT:", passwordInput ? passwordInput.value : "");
+    console.log("TRIMMED UPPER:", val.toUpperCase());
+
+    // 비어 있으면
+    if (!val) {
+      if (passwordError) {
+        passwordError.textContent = "비밀번호를 입력해 주세요.";
       }
+      return;
+    }
 
-      // 대소문자 섞어쳐도 통과하도록
-      if (val.toUpperCase() !== DEMO_PASSWORD) {
-        if (passwordError) {
-          passwordError.textContent =
-            "비밀번호가 올바르지 않습니다. (힌트: RENTAL2025)";
-        }
-        return;
+    // ✔ 대소문자 상관 없이 'RENTAL2025' 비교 (변수 안 쓰고 직접 비교)
+    if (val.toUpperCase() !== "RENTAL2025") {
+      if (passwordError) {
+        passwordError.textContent =
+          "비밀번호가 올바르지 않습니다. (힌트: RENTAL2025)";
       }
+      return;
+    }
 
-      // 성공: 게이트 숨기고 메인 컨텐츠 표시
-      if (passwordError) passwordError.textContent = "";
+    // ✅ 성공: 에러 문구 지우고, 게이트 닫고, 본문 열기
+    if (passwordError) passwordError.textContent = "";
 
-      if (gateEl) gateEl.classList.add("hidden");
-      if (siteEl) siteEl.classList.remove("hidden");
+    if (gateEl) gateEl.classList.add("hidden");
+    if (siteEl) siteEl.classList.remove("hidden");
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    console.log("PASSWORD OK");
+  });
+}
+
 
   // ===============================
   // INVEST 폼: 프론트 데모 애니메이션
@@ -233,7 +249,7 @@ document.addEventListener("DOMContentLoaded", function () {
     pagePrevBtn.addEventListener("click", goPrev);
   }
 
-  // 페이지 클릭으로도 넘기기
+  // 페이지 영역 클릭으로도 넘기기
   if (pageRightSlot) {
     pageRightSlot.addEventListener("click", goNext);
   }
